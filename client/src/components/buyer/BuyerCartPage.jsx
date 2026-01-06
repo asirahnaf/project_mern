@@ -25,8 +25,10 @@ const BuyerCartPage = () => {
       });
   }, []);
   const [showBillingModal, setShowBillingModal] = useState(false);
+  const [selectedCartItemId, setSelectedCartItemId] = useState(null);
 
   const handlePurchase = async (id) => {
+    setSelectedCartItemId(id);
     setShowBillingModal(true);
   };
 
@@ -43,12 +45,14 @@ const BuyerCartPage = () => {
   const navigate = useNavigate();
   console.log(cart);
 
+
   return (
     <div className="w-full p-6 mt-6 bg-white rounded-xl space-y-8">
       <BillingModal
         isOpen={showBillingModal}
         onClose={() => setShowBillingModal(false)}
         cartId={cartId}
+        cartItemId={selectedCartItemId}
       />
       <h2 className="text-2xl font-semibold text-green-700 mb-4">Your Cart</h2>
 

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import ProductLists from "../homeFeed/ProductLists";
 import SingleProductCard from "../homeFeed/SingleProductCard";
 import ProductCreationModal from "./ProductCreationModal";
+import WeatherAdvisoryWidget from "../WeatherAdvisoryWidget";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
@@ -90,6 +91,7 @@ const FarmerMainContent = () => {
 
   return (
     <div className="flex-1 w-full bg-white pb-8 rounded-lg px-6 pt-4 mt-6">
+      <WeatherAdvisoryWidget />
       <div className="flex justify-between items-center gap-6 ">
         <h3 className="title-three">
           All Products <span>({products.length})</span>

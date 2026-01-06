@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import { CiUser } from "react-icons/ci";
 import { RiAlignItemLeftLine } from "react-icons/ri";
 import { FiMessageSquare } from "react-icons/fi";
+import { FaMicroscope } from "react-icons/fa";
 import { useSelector } from "react-redux";
 
 const Sidebar = () => {
@@ -11,7 +12,7 @@ const Sidebar = () => {
     <div className="w-[250px] sticky top-[80px] z-20 pt-10 pb-10 rounded-lg shadow-sm shadow-gray-300 bg-white">
       <div className="w-full grid grid-cols-1 gap-3 ">
         <Link
-          to="/farmer/1"
+          to={`/farmer/${user.id}`}
           className="header flex justify-start items-center gap-3 w-full py-2 hover:bg-slate-100 px-8"
         >
           <RiAlignItemLeftLine className="w-5 h-6 " />
@@ -24,6 +25,13 @@ const Sidebar = () => {
         >
           <FiMessageSquare className="w-5 h-6 " />
           Messages
+        </Link>
+        <Link
+          to={`/farmer/${user.id}/disease-detection`}
+          className="header flex justify-start items-center gap-3 w-full py-2 hover:bg-slate-100 px-8"
+        >
+          <FaMicroscope className="w-5 h-6 " />
+          Crop Doctor
         </Link>
       </div>
     </div>

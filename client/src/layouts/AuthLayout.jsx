@@ -5,12 +5,16 @@ import { useSelector } from "react-redux";
 
 const AuthLayout = () => {
   const navigate = useNavigate();
-  const { isAuthenticated } = useSelector((state) => state.auth);
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/");
+      if (user?.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, user, navigate]);
   return (
     <div className="w-full min-h-screen h-full flex justify-center  bg-white">
       <Outlet />

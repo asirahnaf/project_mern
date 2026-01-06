@@ -12,6 +12,7 @@ import orderRoute from "./routes/order.route.js";
 import reviewRoute from "./routes/review.route.js";
 
 import notificationRoute from "./routes/notification.route.js";
+import marketRoute from "./routes/market.route.js";
 import adminRoute from "./routes/admin.route.js";
 
 import cors from "cors";
@@ -44,6 +45,7 @@ app.use("/api/cart", cartRoute);
 app.use("/api/order", orderRoute);
 app.use("/api/review", reviewRoute);
 app.use("/api/notifications", notificationRoute);
+app.use("/api/market", marketRoute);
 app.use("/api/admin", adminRoute);
 
 // listen

@@ -47,9 +47,11 @@ const Navbar = () => {
                     className="w-[200px] z-[100]  rounded-lg shadow-sm shadow-gray-300 bg-white absolute top-[110%] right-0"
                   >
                     <Link
-                      to={`${role === "farmer"
-                        ? `/farmer/${user.id}`
-                        : `/buyer/${user.id}`
+                      to={`${role === "admin"
+                        ? `/admin`
+                        : role === "farmer"
+                          ? `/farmer/${user.id}`
+                          : `/buyer/${user.id}`
                         }`}
                     >
                       <div className="flex w-full px-4 py-2 hover:bg-slate-100 cursor-pointer gap-2">

@@ -4,7 +4,7 @@ import User from "../models/user.model.js";
 
 export const createOrder = async (req, res) => {
   try {
-    const { cartId, address } = req.body;
+    const { cartId, address, cartItemId } = req.body;
     const userId = req.user._id; // Authenticated user
 
     const user = await User.findById(userId);
@@ -19,8 +19,39 @@ export const createOrder = async (req, res) => {
 
     const orders = [];
 
-    for (const item of cart.items) {
+    // Determine items to process
+    let itemsToProcess = [];
+
+    if (cartItemId) {
+      // Find specific item
+      const itemIndex = cart.items.findIndex(
+        (item) => item._id.toString() === cartItemId
+      );
+
+      if (itemIndex === -1) {
+        return res.status(404).json({ message: "Item not found in cart" });
+      }
+
+      itemsToProcess.push(cart.items[itemIndex]);
+    } else {
+      // Process all items
+      itemsToProcess = cart.items;
+    }
+
+    if (itemsToProcess.length === 0) {
+      return res.status(400).json({ message: "No items to process" });
+    }
+
+    for (const item of itemsToProcess) {
       const product = item.product;
+
+      // Check availability again (safety)
+      if (!product) {
+        // Skip or error? If buying single item, error.
+        if (cartItemId) return res.status(404).json({ message: "Product details missing" });
+        continue;
+      }
+
       if (!product.isAvailable || product.stock < item.quantityKg) {
         return res.status(400).json({
           message: `Product ${product.name} is not available or insufficient stock`,
@@ -48,12 +79,20 @@ export const createOrder = async (req, res) => {
       orders.push(newOrder);
     }
 
-    // Clear the cart after successful order creation
-    await Cart.findByIdAndDelete(cartId);
+    // Remove processed items from cart
+    if (cartItemId) {
+      cart.items = cart.items.filter(
+        (item) => item._id.toString() !== cartItemId
+      );
+    } else {
+      cart.items = []; // Clear all
+    }
+
+    await cart.save();
 
     res.status(201).json({
       message: "Orders created successfully",
-      data: orders,
+      data: cartItemId ? orders[0] : orders, // Return single order obj if single buy, else array
     });
   } catch (error) {
     console.error("Error creating orders:", error);

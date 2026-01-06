@@ -37,6 +37,7 @@ const userSchema = new mongoose.Schema(
       price_change: { type: Boolean, default: true },
       offer: { type: Boolean, default: true },
       admin_update: { type: Boolean, default: true },
+      warning: { type: Boolean, default: true },
     },
   },
   { timestamps: true }

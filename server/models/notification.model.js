@@ -11,7 +11,7 @@ const notificationSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ["price_change", "offer", "admin_update"],
+      enum: ["price_change", "offer", "admin_update", "warning"],
       required: true,
     },
     title: {

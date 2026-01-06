@@ -3,7 +3,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-const BillingModal = ({ isOpen, onClose, cartId }) => {
+const BillingModal = ({ isOpen, onClose, cartId, cartItemId }) => {
   const [formData, setFormData] = useState({
     fullname: "",
     phone: "",
@@ -28,6 +28,7 @@ const BillingModal = ({ isOpen, onClose, cartId }) => {
         "http://localhost:5050/api/order/create",
         {
           cartId: cartId,
+          cartItemId: cartItemId,
           ...formData,
         },
         {

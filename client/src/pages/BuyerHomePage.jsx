@@ -26,20 +26,26 @@ const BuyerHomePage = () => {
         );
         const orders = response.data?.data || [];
 
-        const formattedOrders = orders.map((order) => ({
-          id: order._id,
-          name: order.product.name,
-          quantity: `${order.quantityKg}kg`,
-          // Assuming 'totalPrice' exists in order, else calculate roughly if only unit price available (but simplified here)
-          price: order.totalPrice || 0,
-          status: order.status.charAt(0).toUpperCase() + order.status.slice(1),
-          image: order.product.productImage,
-        }));
+        const formattedOrders = orders.map((order) => {
+          const product = order.product || {};
+          return {
+            id: order._id,
+            name: product.name || "Product Unavailable",
+            quantity: `${order.quantityKg}kg`,
+            price: order.totalPrice || 0,
+            status: order.status.charAt(0).toUpperCase() + order.status.slice(1),
+            image: product.productImage || "https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg",
+          };
+        });
 
         setOrderedProducts(formattedOrders);
 
         // Calculate Stats
-        const totalSpent = orders.reduce((sum, order) => sum + (order.totalPrice || 0), 0);
+        const totalSpent = orders.reduce((sum, order) => {
+          const price = typeof order.totalPrice === 'number' ? order.totalPrice : 0;
+          return sum + price;
+        }, 0);
+
         const activeOrders = orders.filter(
           (o) => o.status !== "delivered" && o.status !== "cancelled"
         ).length;
@@ -124,10 +130,10 @@ const BuyerHomePage = () => {
                   </span>
                   <span
                     className={`text-sm font-semibold ${order.status === "Delivered"
-                        ? "text-green-600"
-                        : order.status === "Shipped"
-                          ? "text-yellow-600"
-                          : "text-gray-500"
+                      ? "text-green-600"
+                      : order.status === "Shipped"
+                        ? "text-yellow-600"
+                        : "text-gray-500"
                       }`}
                   >
                     {order.status}

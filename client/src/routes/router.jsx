@@ -18,36 +18,61 @@ import BuyerHomePage from "../pages/BuyerHomePage";
 import BuyerCartPage from "../components/buyer/BuyerCartPage";
 import PaymentSimulationPage from "../pages/PaymentSimulationPage";
 import NotificationsPage from "../pages/NotificationsPage";
+import DiseaseDetectionPage from "../pages/farmer/DiseaseDetectionPage";
+
+// Admin Imports
+import AdminLayout from "../layouts/AdminLayout";
+import AdminDashboard from "../pages/admin/AdminDashboard";
+import ManageUsers from "../pages/admin/ManageUsers";
+import ManageProducts from "../pages/admin/ManageProducts";
+import ManagePrices from "../pages/admin/ManagePrices";
+import ManageOrders from "../pages/admin/ManageOrders";
+import BroadcastNotifications from "../pages/admin/BroadcastNotifications";
+
 
 const routers = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<MainLayout />}>
-      <Route path="/" element={<AuthLayout />}>
-        <Route path="auth/signin" element={<SignInPage />} />
-        <Route path="auth/signup" element={<Signup />} />
+    <>
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route index element={<AdminDashboard />} />
+        <Route path="users" element={<ManageUsers />} />
+        <Route path="products" element={<ManageProducts />} />
+        <Route path="prices" element={<ManagePrices />} />
+        <Route path="orders" element={<ManageOrders />} />
+        <Route path="notifications" element={<BroadcastNotifications />} />
       </Route>
-      <Route path="/" element={<HomeFeedLayout />}>
-        <Route index element={<HomeFeedPage />} />
-        <Route path="analytics" element={<AnalyticsPage />} />
-        <Route path="notifications" element={<NotificationsPage />} />
+
+      {/* Auth Routes - Independent of MainLayout if simpler, but here nested is fine if handled right */}
+
+      <Route path="/" element={<MainLayout />}>
+        <Route path="auth" element={<AuthLayout />}>
+          <Route path="signin" element={<SignInPage />} />
+          <Route path="signup" element={<Signup />} />
+        </Route>
+        <Route element={<HomeFeedLayout />}>
+          <Route index element={<HomeFeedPage />} />
+          <Route path="analytics" element={<AnalyticsPage />} />
+          <Route path="notifications" element={<NotificationsPage />} />
+        </Route>
+        <Route path="farmer" element={<FarmerLayout />}>
+          <Route path=":farmerId" element={<FarmerHomePage />} />
+          <Route
+            path=":farmerId/messages/:anotherId"
+            element={<MessageLayout />}
+          />
+          <Route path=":farmerId/disease-detection" element={<DiseaseDetectionPage />} />
+        </Route>
+        <Route path="buyer" element={<BuyerLayout />}>
+          <Route path=":buyerId" element={<BuyerHomePage />} />
+          <Route path=":buyerId/cart" element={<BuyerCartPage />} />
+          <Route
+            path=":buyerId/messages/:anotherId"
+            element={<MessageLayout />}
+          />
+          <Route path="payment-simulation/:orderId" element={<PaymentSimulationPage />} />
+        </Route>
       </Route>
-      <Route path="/farmer" element={<FarmerLayout />}>
-        <Route path=":farmerId" element={<FarmerHomePage />} />
-        <Route
-          path=":farmerId/messages/:anotherId"
-          element={<MessageLayout />}
-        />
-      </Route>
-      <Route path="/buyer" element={<BuyerLayout />}>
-        <Route path=":buyerId" element={<BuyerHomePage />} />
-        <Route path=":buyerId/cart" element={<BuyerCartPage />} />
-        <Route
-          path=":buyerId/messages/:anotherId"
-          element={<MessageLayout />}
-        />
-        <Route path="payment-simulation/:orderId" element={<PaymentSimulationPage />} />
-      </Route>
-    </Route>
+    </>
   )
 );
 
