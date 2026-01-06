@@ -8,7 +8,8 @@ import {
     FaTag,
     FaClipboardList,
     FaSignOutAlt,
-    FaBell
+    FaBell,
+    FaShieldAlt
 } from "react-icons/fa";
 import { logoutAPI } from "../features/auth/authSlice";
 import { FaHome } from "react-icons/fa";
@@ -39,6 +40,7 @@ const AdminLayout = () => {
         { name: "Market Prices", path: "/admin/prices", icon: <FaTag /> },
         { name: "Orders", path: "/admin/orders", icon: <FaClipboardList /> },
         { name: "Notifications", path: "/admin/notifications", icon: <FaBell /> },
+        { name: "Insurance", path: "/admin/insurance", icon: <FaShieldAlt /> },
     ];
 
     return (

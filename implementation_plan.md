@@ -1,57 +1,55 @@
-# Admin Dashboard Implementation Plan
+# Equipment & Machinery Rental Marketplace Implementation Plan
 
 ## Overview
-We will create a comprehensive Admin Dashboard for the AgriConnect platform. This dashboard will be a restricted area accessible only to users with the `admin` role. It will allow managing users, products, orders, and setting daily crop market prices.
+We will implement a peer-to-peer marketplace where users can rent out agricultural equipment and machinery. This feature includes listing equipment, browsing available items, and a secure booking system that prevents double bookings.
 
 ## Features
-1.  **Dashboard Overview**: Statistics (Total Users, Total Sales, Active Products).
-2.  **User Management**: View all users, delete/block users (e.g., specific farmers or buyers).
-3.  **Product Management**: View all listings, remove inappropriate products, or update details.
-4.  **Market Price Management**: A new feature allowing Admins to set "Daily Market Prices" for crops, which can serve as a reference for farmers and buyers.
-5.  **Order Management**: View transaction history and status.
-6.  **Notification Center**: Broadcast system-wide alerts (already partially implemented).
+1.  **Equipment Listing**: Users can list machinery (Tractors, Harvesters, etc.) with photos, daily rates, and descriptions.
+2.  **Marketplace View**: A dedicated page for users to browse and filter available equipment.
+3.  **Booking System**: A calendar-based reservation system.
+4.  **Double Booking Prevention**: Logic to ensure equipment cannot be booked for overlapping dates.
+5.  **Dashboard Management**:
+    *   **Owners**: Manage listings and view/approve incoming booking requests.
+    *   **Renters**: View booking history and status.
 
 ## Technical Implementation Steps
 
 ### 1. Backend (Server)
 
 #### A. New Models
-- **`MarketPrice` Model**: To store daily prices for crops.
-  - Fields: `cropName` (String), `price` (Number), `date` (Date).
+- **`Equipment` Model**:
+  - Fields: `name`, `description`, `category` (e.g., Tractor, Tool), `dailyRate` (Number), `images` (Array), `owner` (Ref User), `location`, `available` (Boolean).
+- **`Rental` Model**:
+  - Fields: `equipment` (Ref Equipment), `renter` (Ref User), `startDate`, `endDate`, `totalCost`, `status` (pending, confirmed, completed, cancelled).
 
-#### B. API Routes (`admin.route.js`)
-We will add the following endpoints protected by `verifyAdmin`:
-- `GET /api/admin/stats` - Fetch overall system stats.
-- `GET /api/admin/users` - List all users.
-- `DELETE /api/admin/users/:id` - Delete a user.
-- `GET /api/admin/products` - List all products.
-- `DELETE /api/admin/products/:id` - Delete a product.
-- `GET /api/admin/prices` - Get current market prices.
-- `POST /api/admin/prices` - Set/Update market prices.
-- `GET /api/admin/orders` - List recent orders.
+#### B. API Routes
+- **`equipment.route.js`**:
+  - `POST /` - Create listing.
+  - `GET /` - Get all listeners.
+  - `GET /:id` - Get details.
+  - `PUT /:id` - Update listing.
+  - `DELETE /:id` - Delete listing.
+- **`rental.route.js`**:
+  - `POST /book` - Create a booking (includes overlap check).
+  - `GET /my-rentals` - Get bookings made by the user.
+  - `GET /owner-requests` - Get bookings for the user's equipment.
+  - `PUT /:id/status` - Approve/Reject booking.
 
-#### C. Controllers (`admin.controller.js`)
-- Implement logic for the above routes.
-- Reuse efficient querying (e.g., `User.find()`, `Product.find()`).
+#### C. Controllers
+- **`rental.controller.js`**:
+  - **Crucial Logic**: `checkAvailability(equipmentId, start, end)` must return false if any confirmed booking overlaps.
 
 ### 2. Frontend (Client)
 
-#### A. Layout (`AdminLayout.tsx`)
-- A separate layout with a sidebar navigation suited for management tasks.
-- Links: Dashboard, Users, Products, Market Prices, Orders, Notifications.
+#### A. State Management (Redux)
+- **`equipmentSlice.js`**: specialized async thunks for fetching equipment and rentals.
 
-#### B. Components/Pages
-- **`AdminDashboard.jsx`**: Cards showing key metrics.
-- **`ManageUsers.jsx`**: A table displaying users with "Delete" buttons.
-- **`ManageProducts.jsx`**: A table displaying products with images and "Remove" options.
-- **`ManagePrices.jsx`**: A form to add/update daily rates for crops (e.g., Potato, Rice).
-- **`ManageOrders.jsx`**: List of all orders.
+#### B. Pages/Components
+- **`RentalMarketplace.jsx`**: Main gallery view.
+- **`EquipmentDetails.jsx`**: Individual item view with a "Book Now" section containing a date picker.
+- **`AddEquipment.jsx`**: Form for listing new functionality.
+- **`RentalDashboard.jsx`**: Tabbed view for "My Listings", "Incoming Requests", and "My Bookings".
 
 ### 3. Integration
-- Add the `/admin/*` routes to the main `App.jsx` or router configuration.
-- Ensure the `AdminLayout` wraps these routes and checks for `user.role === 'admin'`.
-
-## User Experience (UX)
-- **Design**: Clean, data-heavy interface. Use tables for data and cards for stats.
-- **Feedback**: Success toasts when an admin deletes a user or updates a price.
-- **Security**: Redirect non-admins to the home page if they try to access `/admin`.
+- Add "Rentals" to main navigation.
+- Ensure only authenticated users can book or list.

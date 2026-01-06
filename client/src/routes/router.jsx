@@ -28,6 +28,14 @@ import ManageProducts from "../pages/admin/ManageProducts";
 import ManagePrices from "../pages/admin/ManagePrices";
 import ManageOrders from "../pages/admin/ManageOrders";
 import BroadcastNotifications from "../pages/admin/BroadcastNotifications";
+import InsuranceClaimForm from "../components/insurance/InsuranceClaimForm";
+import FarmerClaimsList from "../components/insurance/FarmerClaimsList";
+import AdminClaimsDashboard from "../components/insurance/AdminClaimsDashboard";
+
+// Rental Imports
+import RentalMarketplace from "../pages/rental/RentalMarketplace";
+import EquipmentDetails from "../pages/rental/EquipmentDetails";
+import RentalDashboard from "../pages/rental/RentalDashboard";
 
 
 const routers = createBrowserRouter(
@@ -40,6 +48,7 @@ const routers = createBrowserRouter(
         <Route path="prices" element={<ManagePrices />} />
         <Route path="orders" element={<ManageOrders />} />
         <Route path="notifications" element={<BroadcastNotifications />} />
+        <Route path="insurance" element={<AdminClaimsDashboard />} />
       </Route>
 
       {/* Auth Routes - Independent of MainLayout if simpler, but here nested is fine if handled right */}
@@ -54,6 +63,10 @@ const routers = createBrowserRouter(
           <Route path="analytics" element={<AnalyticsPage />} />
           <Route path="notifications" element={<NotificationsPage />} />
         </Route>
+        <Route path="rental" element={<RentalMarketplace />} />
+        <Route path="rental/:id" element={<EquipmentDetails />} />
+        <Route path="rental/dashboard" element={<RentalDashboard />} />
+
         <Route path="farmer" element={<FarmerLayout />}>
           <Route path=":farmerId" element={<FarmerHomePage />} />
           <Route
@@ -61,6 +74,8 @@ const routers = createBrowserRouter(
             element={<MessageLayout />}
           />
           <Route path=":farmerId/disease-detection" element={<DiseaseDetectionPage />} />
+          <Route path=":farmerId/insurance" element={<FarmerClaimsList />} />
+          <Route path=":farmerId/insurance/new" element={<InsuranceClaimForm />} />
         </Route>
         <Route path="buyer" element={<BuyerLayout />}>
           <Route path=":buyerId" element={<BuyerHomePage />} />

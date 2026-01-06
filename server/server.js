@@ -14,6 +14,10 @@ import reviewRoute from "./routes/review.route.js";
 import notificationRoute from "./routes/notification.route.js";
 import marketRoute from "./routes/market.route.js";
 import adminRoute from "./routes/admin.route.js";
+import insuranceRoute from "./routes/insurance.route.js";
+
+import equipmentRoute from "./routes/equipment.route.js";
+import rentalRoute from "./routes/rental.route.js";
 
 import cors from "cors";
 import { app, server } from "./socket/socket.js";
@@ -47,6 +51,9 @@ app.use("/api/review", reviewRoute);
 app.use("/api/notifications", notificationRoute);
 app.use("/api/market", marketRoute);
 app.use("/api/admin", adminRoute);
+app.use("/api/insurance", insuranceRoute);
+app.use("/api/equipment", equipmentRoute);
+app.use("/api/rental", rentalRoute);
 
 // listen
 server.listen(PORT, () => {

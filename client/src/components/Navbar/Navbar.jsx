@@ -29,6 +29,9 @@ const Navbar = () => {
         </Link>
         <div className="flex gap-4">
           <Link to="/analytics" className="text-gray-600 hover:text-green-700 font-medium">Analytics</Link>
+          {role === 'farmer' && (
+            <Link to="/rental" className="text-gray-600 hover:text-green-700 font-medium">Rent Equipment</Link>
+          )}
         </div>
         <div className="flex justify-end items-center gap-4">
           {user ? (
