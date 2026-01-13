@@ -55,8 +55,10 @@ app.use("/api/insurance", insuranceRoute);
 app.use("/api/equipment", equipmentRoute);
 app.use("/api/rental", rentalRoute);
 
-// listen
-server.listen(PORT, () => {
-  mongodbConfig();
-  console.log(`Server Running on port ${PORT}`.bgMagenta.white);
-});
+// listen - allow skipping when SKIP_SERVER is set (useful for tests)
+if (process.env.SKIP_SERVER !== 'true') {
+  server.listen(PORT, () => {
+    mongodbConfig();
+    console.log(`Server Running on port ${PORT}`.bgMagenta.white);
+  });
+}
